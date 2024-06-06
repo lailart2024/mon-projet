@@ -11,8 +11,6 @@ import Skills from './components/Skills.js';
 import Competencies from './components/Competencies.js';
 import Footer from './components/Footer.js';
 
-
-
 function App() {
   return (
     <div className="App">
@@ -29,14 +27,21 @@ function App() {
           <Interests />
         </div>
         <div className="rightsplit">
-        <ProfessionalObjective />
+          <ProfessionalObjective />
           <Education />
           <Skills />
-          <Competencies/>
+          <Competencies />
         </div>
         <Footer />
+      </div>
+      {/* Add the link to formulaire.html */}
+      <div className="form-link">
+        <a href={`${process.env.PUBLIC_URL}/formulaire.html`} target="_blank" rel="noopener noreferrer">
+          Go to Formulaire
+        </a>
       </div>
     </div>
   );
 }
+
 export default App;
