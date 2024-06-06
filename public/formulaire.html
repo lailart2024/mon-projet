@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire de CV</title>
+    <style>
+        body {
+            font-family: 'Ariel', sans-serif;
+            background-color: rgb(212, 168, 168);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        #form-container {
+            width: 60%;
+            margin: 50px auto;
+            padding: 20px; 
+            border: 1px solid #f298d2;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 15px #3c0419;
+            border-radius: 10px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #3c0419;
+        }
+        input[type="text"], input[type="email"], textarea, select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid rgb(212, 168, 168);
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"], button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border: none;
+            background-color: rgb(212, 168, 168);
+            color: #ffffff;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: rgb(212, 168, 168);
+        }
+        h1 {
+            color: #903075;
+            font-size: 36px;
+        }
+        .icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+        }
+        .icon-container img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .list-container {
+            margin-bottom: 15px;
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .list-item input {
+            flex-grow: 1;
+        }
+        .list-item button {
+            margin-left: 10px;
+            padding: 5px 10px;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        function validateField(input) {
+            const fieldType = input.getAttribute('name');
+            const value = input.value;
+            let message = "";
+            switch(fieldType) {
+                case 'Prenom':
+                case 'nom':
+                    if (!/^[A-Z][a-zA-Z\s]+$/.test(value)) {
+                        message = "Nom et prénom doivent commencer par une majuscule et ne pas contenir de chiffres ni de caractères spéciaux.";
+                    }
+                    break;
+                case 'age':
+                    if (!/^\d+$/.test(value) || parseInt(value) < 18) {
+                        message = "L'âge doit être un chiffre supérieur ou égal à 18.";
+                    }
+                    break;
+                case 'email':
+                    if (!/^[^\s@]+@[^\s@]+\.(com|fr)$/.test(value)) {
+                        message = "Le mail doit se composer de caractères + '@' + caractères + '.com' ou '.fr'.";
+                    }
+                    break;
+                case 'adresse':
+                    if (value.length > 100 || /[^a-zA-Z0-9\s]/.test(value)) {
+                        message = "L'adresse ne doit pas dépasser 100 caractères et ne doit pas contenir de caractères spéciaux.";
+                    }
+                    break;
+                case 'titreCV':
+                    if (/[\d&@,]/.test(value)) {
+                        message = "Le titre du CV ne doit pas contenir de chiffres ni de caractères spéciaux (&, @, etc.).";
+                    }
+                    break;
+                case 'objectif':
+                    if (/[\d&@,]/.test(value)) {
+                        message = "La description de l'objectif professionnel ne doit pas contenir de chiffres ni de caractères spéciaux.";
+                    }
+                    break;
+                default:
+                    break;
+            }
+            const errorMessage = input.nextElementSibling;
+            if (message) {
+                errorMessage.textContent = message;
+                input.classList.add('error');
+            } else {
+                errorMessage.textContent = "";
+                input.classList.remove('error');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input, textarea').forEach(input => {
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                input.parentNode.insertBefore(errorMessage, input.nextSibling);
+                input.addEventListener('blur', () => validateField(input));
+            });
+        });
+        function validateForm() {
+            let valid = true;
+            document.querySelectorAll('input, textarea').forEach(input => {
+                validateField(input);
+                if (input.classList.contains('error')) {
+                    valid = false;
+                }
+            });
+            return valid;
+        }
+        function addSectionTitle() {
+            let sectionsContainer = document.getElementById("sectionsContainer");
+            let newSection = document.createElement("div");
+            newSection.className = "list-item";
+            newSection.innerHTML = `
+                <input type="text" name="titreSection" class="section-title" placeholder="Titre de section">
+                <button type="button" onclick="removeSection(this)">Supprimer</button>
+                <div class="error-message"></div>
+            `;
+            sectionsContainer.appendChild(newSection);
+            const newInput = newSection.querySelector('input');
+            newInput.addEventListener('blur', () => validateField(newInput));
+        }
+        function removeSection(button) {
+            button.parentElement.remove();
+        }
+        function addLoisir() {
+            let loisirsContainer = document.getElementById("loisirsContainer");
+            let newLoisir = document.createElement("div");
+            newLoisir.innerHTML = `
+                <select name="loisirs">
+                    <option value="lecture">Lecture</option>
+                    <option value="sport">Sport</option>
+                    <option value="musique">Musique</option>
+                    <option value="voyage">Voyage</option>
+                    <option value="randonnée">Randonnée</option>
+                    <option value="danse">Danse</option>
+                    <option value="chess">Chess</option>
+                </select>
+            `;
+            loisirsContainer.appendChild(newLoisir);
+        }
+        function addLangue() {
+            let languesContainer = document.getElementById("languesContainer");
+            let newLangue = document.createElement("div");
+            newLangue.innerHTML = `
+                <label>Langue:</label>
+                <input type="text" name="langue">
+                <label>Pourcentage de maîtrise:</label>
+                <input type="range" name="maitrise" min="0" max="100" step="1" value="0">
+            `;
+            languesContainer.appendChild(newLangue);
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Remplissage des jours
+            var joursSelect = document.getElementById("jour");
+            for (var i = 1; i <= 31; i++) {
+                var option = document.createElement("option");
+                option.text = i;
+                option.value = i;
+                joursSelect.add(option);
+            }
+            // Remplissage des mois
+            var moisSelect = document.getElementById("mois");
+            var moisArray = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            for (var i = 0; i < moisArray.length; i++) {
+                var option = document.createElement("option");
+                option.text = moisArray[i];
+                option.value = i + 1;
+                moisSelect.add(option);
+            }
+            // Remplissage des années
+            var anneeSelect = document.getElementById("annee");
+            var currentYear = new Date().getFullYear();
+            for (var i = currentYear; i >= currentYear - 100; i--) {
+                var option = document.createElement("option");
+                option.text = i;
+                option.value = i;
+                anneeSelect.add(option);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div id="form-container">
+        <h1>Formulaire de CV</h1>
+        <form onsubmit="return validateForm()">
+            <label for="Prenom">Prénom:</label>
+            <input type="text" id="Prenom" name="Prenom">
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom">
+            
+            <label for="age">Âge:</label>
+            <input type="text" id="age" name="age">
+            
+            <label for="email">Mail:</label>
+            <input type="email" id="email" name="email">
+            
+            <label for="adresse">Adresse:</label>
+            <input type="text" id=""adresse" name="adresse">
+            
+            <label for="titreCV">Titre du CV:</label>
+            <input type="text" id="titreCV" name="titreCV">
+            
+            <label for="objectif">Description de l'objectif professionnel:</label>
+            <textarea id="objectif" name="objectif"></textarea>
+            
+            <label for="photo">Photo de profil:</label>
+            <input type="file" id="photo" name="photo" accept="image/*">
+            
+            <div id="sectionsContainer" class="list-container">
+                <label for="titreSection">Titres des sections:</label>
+                <div class="list-item">
+                    <input type="text" name="titreSection" class="section-title" placeholder="">
+                    <button type="button" onclick="addSectionTitle()">Ajouter</button>
+                </div>
+            </div>
+            <label>Date de naissance:</label>
+            <select id="jour" name="jour">
+                <option value="" disabled selected>Jour</option>
+            </select>
+           
+           <select id="mois" name="mois">
+              <option value="" disabled selected>Mois</option>
+            </select>
+            
+            <select id="annee" name="annee">
+              <option value="" disabled selected>Année</option>
+            </select>
+            
+            <script>
+              // Remplissage des jours
+              var joursSelect = document.getElementById("jour");
+              for (var i = 1; i <= 31; i++) {
+                var option = document.createElement("option");
+                option.text = i;
+                option.value = i;
+                joursSelect.add(option);
+              }
+            
+              // Remplissage des mois
+              var moisSelect = document.getElementById("mois");
+              var moisArray = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+              for (var i = 0; i < moisArray.length; i++) {
+                var option = document.createElement("option");
+                option.text = moisArray[i];
+                option.value = i + 1;
+                moisSelect.add(option);
+              }
+            
+              // Remplissage des années
+              var anneeSelect = document.getElementById("annee");
+              var currentYear = new Date().getFullYear();
+              for (var i = currentYear; i >= currentYear - 100; i--) {
+                var option = document.createElement("option");
+                option.text = i;
+                option.value = i;
+                anneeSelect.add(option);
+              }
+            </script>
+            
+        
+
+            <label>Loisirs:</label>
+            <div id="loisirsContainer">
+                <input type="checkbox" name="loisir" value="lecture"> Lecture<br>
+                <input type="checkbox" name="loisir" value="sport"> Sport<br>
+                <input type="checkbox" name="loisir" value="musique"> Musique<br>
+                <input type="checkbox" name="loisir" value="voyage"> Voyage<br>
+                <input type="checkbox" name="loisir" value="randonnée"> Randonnée<br>
+                <input type="checkbox" name="loisir" value="danse"> Danse<br>
+                <input type="checkbox" name="loisir" value="chess"> Chess<br>
+            </div>
+            <label for="diplome">Diplôme:</label>
+            <select id="diplome" name="diplome">
+                <option value="bac">Baccalauréat</option>
+                <option value="licence">Licence</option>
+                <option value="master">Master</option>
+                <option value="doctorat">Doctorat</option>
+            </select>
+            <div id="languesContainer">
+                <label>Langues:</label>
+                <button type="button" onclick="addLangue()">Ajouter une langue</button>
+            </div>
+            <input type="submit" value="Soumettre">
+        </form>
+    </div>
+</body>
+</html>
