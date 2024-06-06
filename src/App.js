@@ -31,17 +31,18 @@ function App() {
           <Education />
           <Skills />
           <Competencies />
+          {/* Add the link to formulaire.html */}
+          <div className="form-link">
+            <a href={`${process.env.PUBLIC_URL}/formulaire.html`} target="_blank" rel="noopener noreferrer">
+              Go to Formulaire
+            </a>
+          </div>
         </div>
-        <Footer />
       </div>
-      {/* Add the link to formulaire.html */}
-      <div className="form-link">
-        <a href={`${process.env.PUBLIC_URL}/formulaire.html`} target="_blank" rel="noopener noreferrer">
-          Go to Formulaire
-        </a>
-      </div>
+      <Footer />
     </div>
   );
 }
 
 export default App;
+

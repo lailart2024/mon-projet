@@ -28,6 +28,12 @@
   color: #61dafb;
 }
 
+.form-link {
+  margin-top: 2rem; /* Adjust as needed for two line breaks */
+  text-align: center; /* Center the link, optional */
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
