@@ -12,11 +12,6 @@ function Competencies() {
         <li>gestion de projet</li>
         <li>travail en équipe</li>
       </ul>
-      <br />
-      <br /> 
-      <p>
-        Pour remplir mon formulaire, <a href="/formulaire.html">cliquez ici</a>.
-      </p>
     </div>
   );
 }
